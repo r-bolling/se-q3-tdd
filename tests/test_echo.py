@@ -15,6 +15,7 @@ import importlib
 import argparse
 import unittest
 import subprocess
+import random
 
 # devs: change this to 'soln.echo' to run this suite against the solution
 PKG_NAME = 'echo'
@@ -133,8 +134,23 @@ class TestEcho(unittest.TestCase):
         self.assertEqual(output[0], 'Hello World')
 
     def test_multiple_options(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if args are performed in proper order (from help msg)'''
+        args = ['--title', '--lower', '--upper']
+        random.shuffle(args)
+        args.append('hElLo WoRLd')
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'Hello World')
+        #randomly drop flags from args
+        del args[0:random.randrange(0, 4)]
+        output = run_capture(self.module.__file__, args)
+        if '--title' in args:
+            self.assertEqual(output[0], 'Hello World')
+        elif '--lower' in args:
+            self.assertEqual(output[0], 'hello world')
+        elif '--upper' in args:
+            self.assertEqual(output[0], 'HELLO WORLD')
+        else:
+            self.assertEqual(output[0], 'hElLo WoRLd')
 
     def test_help_message(self):
         # your code here
