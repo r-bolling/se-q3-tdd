@@ -7,7 +7,8 @@ Students MUST EDIT this module, to add more tests to run
 against the 'echo.py' program.
 """
 
-__author__ = "???"
+__author__ = '''r-bolling with help from Kenzie Academy Lessons.
+test_author and test_flake8 came from baby_names'''
 
 import sys
 import importlib
@@ -131,7 +132,8 @@ class TestEcho(unittest.TestCase):
     #
     def test_flake8(self):
         # your code here
-        self.fail()  # replace me
+        result = subprocess.run(['flake8', self.module.__file__])
+        self.assertEqual(result.returncode, 0)
 
     #
     # Students: add an __author__ test here.
@@ -139,7 +141,7 @@ class TestEcho(unittest.TestCase):
     #
     def test_author(self):
         # your code here
-        self.fail()  # replace me
+        self.assertNotEqual(self.module.__author__, '???')
 
 
 if __name__ == '__main__':
