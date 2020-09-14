@@ -62,7 +62,6 @@ class TestEcho(unittest.TestCase):
         self.assertIsInstance(
             result, argparse.ArgumentParser,
             "create_parser() function is not returning a parser object")
-
     #
     # Students: add more parser tests here:
     # - Does it understand the --upper option?
@@ -71,7 +70,12 @@ class TestEcho(unittest.TestCase):
     #
     def test_parser_namespace(self):
         # your code here
-        self.fail()  # replace me
+        result = self.module.create_parser()
+        cmd_args = ['text', '--upper', '--lower', '--title']
+        ns = result.parse_args(cmd_args)
+        self.assertTrue(ns.upper)
+        self.assertTrue(ns.lower)
+        self.assertTrue(ns.title)
 
     def test_echo(self):
         """Check if main() function prints anything at all"""
@@ -99,16 +103,22 @@ class TestEcho(unittest.TestCase):
     #
 
     def test_lower_long(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if long option '--lower' performs lowercasing'''
+        args = ["--lower", "HELLO WORLD"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'hello world')
 
     def test_upper_short(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if short option '-u' performs uppercasing'''
+        args = ["-u", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'HELLO WORLD')
 
     def test_upper_long(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if long option '--upper' performs uppercasing'''
+        args = ["--upper", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'HELLO WORLD')
 
     def test_title_short(self):
         # your code here
@@ -124,8 +134,11 @@ class TestEcho(unittest.TestCase):
 
     def test_help_message(self):
         # your code here
-        self.fail()  # replace me
-
+        result = self.module.create_parser()
+        args = ['--help', 'text']
+        output = run_capture(self.module.__file__, args)
+        # TODO: Add assert reg to verify output help data
+        self.fail()
     #
     # Students: add a flake8 test here.
     # You may borrow some test code from previous assignments!
