@@ -121,12 +121,16 @@ class TestEcho(unittest.TestCase):
         self.assertEqual(output[0], 'HELLO WORLD')
 
     def test_title_short(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if short option '-t' performs uppercasing'''
+        args = ["-t", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'Hello World')
 
     def test_title_long(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if long option '--title' performs uppercasing'''
+        args = ["--title", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'Hello World')
 
     def test_multiple_options(self):
         # your code here
