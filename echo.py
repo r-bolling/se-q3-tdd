@@ -2,21 +2,38 @@
 # -*- coding: utf-8 -*-
 """An enhanced version of the 'echo' cmd line utility."""
 
-__author__ = "???"
+__author__ = "r-bolling with help from Kenzie Academy Lessons"
 
 
 import sys
+import argparse
 
 
 def create_parser():
     """Returns an instance of argparse.ArgumentParser"""
     # your code here
-    return
+    parser = argparse.ArgumentParser()
+    parser.add_argument('text')
+    parser.add_argument('-u', '--upper', action='store_true')
+    parser.add_argument('-l', '--lower', action='store_true')
+    parser.add_argument('-t', '--title', action='store_true')
+    return parser
 
 
 def main(args):
     """Implementation of echo"""
-    # your code here
+    parser = create_parser()
+    ns = parser.parse_args(args)
+
+    if ns:
+        if ns.title:
+            print(ns.text.title())
+        elif ns.lower:
+            print(ns.text.lower())
+        elif ns.upper:
+            print(ns.text.upper())
+        else:
+            print(ns.text)
     return
 
 
