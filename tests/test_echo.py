@@ -7,13 +7,15 @@ Students MUST EDIT this module, to add more tests to run
 against the 'echo.py' program.
 """
 
-__author__ = "???"
+__author__ = '''r-bolling with help from Kenzie Academy Lessons.
+test_author and test_flake8 came from baby_names'''
 
 import sys
 import importlib
 import argparse
 import unittest
 import subprocess
+import random
 
 # devs: change this to 'soln.echo' to run this suite against the solution
 PKG_NAME = 'echo'
@@ -61,7 +63,6 @@ class TestEcho(unittest.TestCase):
         self.assertIsInstance(
             result, argparse.ArgumentParser,
             "create_parser() function is not returning a parser object")
-
     #
     # Students: add more parser tests here:
     # - Does it understand the --upper option?
@@ -69,8 +70,12 @@ class TestEcho(unittest.TestCase):
     # - If you enable one option as true, are the rest false?
     #
     def test_parser_namespace(self):
-        # your code here
-        self.fail()  # replace me
+        result = self.module.create_parser()
+        cmd_args = ['text', '--upper', '--lower', '--title']
+        ns = result.parse_args(cmd_args)
+        self.assertTrue(ns.upper)
+        self.assertTrue(ns.lower)
+        self.assertTrue(ns.title)
 
     def test_echo(self):
         """Check if main() function prints anything at all"""
@@ -98,32 +103,70 @@ class TestEcho(unittest.TestCase):
     #
 
     def test_lower_long(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if long option '--lower' performs lowercasing'''
+        args = ["--lower", "HELLO WORLD"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'hello world')
 
     def test_upper_short(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if short option '-u' performs uppercasing'''
+        args = ["-u", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'HELLO WORLD')
 
     def test_upper_long(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if long option '--upper' performs uppercasing'''
+        args = ["--upper", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'HELLO WORLD')
 
     def test_title_short(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if short option '-t' performs uppercasing'''
+        args = ["-t", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'Hello World')
 
     def test_title_long(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if long option '--title' performs uppercasing'''
+        args = ["--title", "hello world"]
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'Hello World')
 
     def test_multiple_options(self):
-        # your code here
-        self.fail()  # replace me
+        '''Check if args are performed in proper order (from help msg)'''
+        args = ['--title', '--lower', '--upper']
+        random.shuffle(args)
+        args.append('hElLo WoRLd')
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output[0], 'Hello World')
+        #randomly drop flags from args
+        del args[0:random.randrange(0, 4)]
+        output = run_capture(self.module.__file__, args)
+        if '--title' in args:
+            self.assertEqual(output[0], 'Hello World')
+        elif '--lower' in args:
+            self.assertEqual(output[0], 'hello world')
+        elif '--upper' in args:
+            self.assertEqual(output[0], 'HELLO WORLD')
+        else:
+            self.assertEqual(output[0], 'hElLo WoRLd')
 
     def test_help_message(self):
-        # your code here
-        self.fail()  # replace me
+        args = ['--help', 'text']
+        expected_output = ['usage: echo.py [-h] [-u] [-l] [-t] text',
+        '',
+        'Perform transformation on input text.',
+        '',
+        'positional arguments:',
+        '  text         text to be manipulated',
+        '',
+        'optional arguments:',
+        '  -h, --help   show this help message and exit',
+        '  -u, --upper  convert text to uppercase',
+        '  -l, --lower  convert text to lowercase',
+        '  -t, --title  convert text to titlecase']
+        output = run_capture(self.module.__file__, args)
+        self.assertEqual(output, expected_output)
 
     #
     # Students: add a flake8 test here.
@@ -131,7 +174,8 @@ class TestEcho(unittest.TestCase):
     #
     def test_flake8(self):
         # your code here
-        self.fail()  # replace me
+        result = subprocess.run(['flake8', self.module.__file__])
+        self.assertEqual(result.returncode, 0)
 
     #
     # Students: add an __author__ test here.
@@ -139,7 +183,7 @@ class TestEcho(unittest.TestCase):
     #
     def test_author(self):
         # your code here
-        self.fail()  # replace me
+        self.assertNotEqual(self.module.__author__, '???')
 
 
 if __name__ == '__main__':
