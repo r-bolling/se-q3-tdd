@@ -70,7 +70,6 @@ class TestEcho(unittest.TestCase):
     # - If you enable one option as true, are the rest false?
     #
     def test_parser_namespace(self):
-        # your code here
         result = self.module.create_parser()
         cmd_args = ['text', '--upper', '--lower', '--title']
         ns = result.parse_args(cmd_args)
@@ -153,12 +152,22 @@ class TestEcho(unittest.TestCase):
             self.assertEqual(output[0], 'hElLo WoRLd')
 
     def test_help_message(self):
-        # your code here
-        result = self.module.create_parser()
         args = ['--help', 'text']
+        expected_output = ['usage: echo.py [-h] [-u] [-l] [-t] text',
+        '',
+        'Perform transformation on input text.',
+        '',
+        'positional arguments:',
+        '  text         text to be manipulated',
+        '',
+        'optional arguments:',
+        '  -h, --help   show this help message and exit',
+        '  -u, --upper  convert text to uppercase',
+        '  -l, --lower  convert text to lowercase',
+        '  -t, --title  convert text to titlecase']
         output = run_capture(self.module.__file__, args)
-        # TODO: Add assert reg to verify output help data
-        self.fail()
+        self.assertEqual(output, expected_output)
+
     #
     # Students: add a flake8 test here.
     # You may borrow some test code from previous assignments!
